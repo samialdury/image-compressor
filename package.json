@@ -1,24 +1,29 @@
 {
-	"name": "img-comp",
+	"name": "image-compressor",
 	"version": "1.0.0",
-	"description": "",
 	"type": "module",
-	"scripts": {
-		"format": "prettier --write . ",
-		"main": "tsx src/index.ts"
-	},
-	"keywords": [],
-	"author": "",
-	"license": "ISC",
+	"author": "Sami Al-Dury",
+	"description": "",
 	"packageManager": "pnpm@10.9.0",
+	"scripts": {
+		"build": "tsc",
+		"main": "node --enable-source-maps build/index.js",
+		"main:debug": "DEBUG=image-compressor:* node --enable-source-maps build/index.js",
+		"dev": "tsx src/index.ts",
+		"dev:debug": "DEBUG=image-compressor:* tsx src/index.ts",
+		"format": "prettier --write . "
+	},
 	"dependencies": {
+		"debug": "4.4.0",
 		"filesize": "10.1.6",
 		"sharp": "0.34.1"
 	},
 	"devDependencies": {
 		"@total-typescript/tsconfig": "1.0.4",
+		"@types/debug": "4.1.12",
 		"@types/node": "22.14.1",
 		"prettier": "3.5.3",
-		"tsx": "4.19.3"
+		"tsx": "4.19.3",
+		"typescript": "5.8.3"
 	}
 }

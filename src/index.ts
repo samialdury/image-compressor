@@ -3,6 +3,41 @@ import path from 'node:path'
 import fs from 'node:fs'
 import sharp from 'sharp'
 import { filesize } from 'filesize'
+import { parseArgs } from 'node:util'
+import debug from 'debug'
+
+const d = debug('image-compressor:main')
+
+const args = parseArgs({
+	options: {
+		input: {
+			type: 'string',
+			short: 'i',
+			default: 'input',
+			help: 'Input directory',
+		},
+		output: {
+			type: 'string',
+			short: 'o',
+			default: 'output',
+			help: 'Output directory',
+		},
+		quality: {
+			type: 'string',
+			short: 'q',
+			default: '50',
+			help: 'Quality of the output image (0-100)',
+		},
+	},
+})
+
+const options = {
+	...args.values,
+	quality: parseInt(args.values.quality, 10),
+} as const
+
+d('args: %o', args.values)
+d('options: %o', options)
 
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
