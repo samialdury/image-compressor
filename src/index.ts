@@ -11,6 +11,7 @@ const base = path.join(dirname, '..')
 const input = path.join(base, 'input')
 const output = path.join(base, 'output')
 
+// @ts-expect-error
 async function* walk(dir: string) {
 	for await (const d of await fs.promises.opendir(dir)) {
 		const entry = path.join(dir, d.name)
@@ -30,6 +31,7 @@ const files = [] as {
 	originalSize: number
 	newSize?: number
 	reduction?: number
+	reductionPercent?: number
 	formattedReduction?: string
 }[]
 
@@ -72,7 +74,10 @@ for (const f of files) {
 	const el = files[index]!
 	el.newSize = newSize
 	el.reduction = el.originalSize - newSize
+	const decrease = el.originalSize - newSize
+	el.reduction = decrease
+	el.reductionPercent = Math.round((decrease / el.originalSize) * 100)
 	el.formattedReduction = filesize(el.reduction)
 }
 
-console.log(files)
+console.table(files)
