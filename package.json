@@ -1,23 +1,23 @@
 {
-  "name": "img-comp",
-  "version": "1.0.0",
-  "description": "",
-  "type": "module",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "packageManager": "pnpm@10.9.0",
-  "dependencies": {
-    "filesize": "10.1.6",
-    "sharp": "0.34.1"
-  },
-  "devDependencies": {
-    "@total-typescript/tsconfig": "1.0.4",
-    "@types/node": "22.14.1",
-    "prettier": "3.5.3",
-    "tsx": "4.19.3"
-  }
+	"name": "img-comp",
+	"version": "1.0.0",
+	"description": "",
+	"type": "module",
+	"scripts": {
+		"format": "prettier --write . "
+	},
+	"keywords": [],
+	"author": "",
+	"license": "ISC",
+	"packageManager": "pnpm@10.9.0",
+	"dependencies": {
+		"filesize": "10.1.6",
+		"sharp": "0.34.1"
+	},
+	"devDependencies": {
+		"@total-typescript/tsconfig": "1.0.4",
+		"@types/node": "22.14.1",
+		"prettier": "3.5.3",
+		"tsx": "4.19.3"
+	}
 }
