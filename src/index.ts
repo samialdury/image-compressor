@@ -49,7 +49,7 @@ const options = {
 		type: 'string',
 		short: 'f',
 		default: 'avif',
-		help: 'Output format',
+		help: `Output format (${OUTPUT_EXTENSIONS.join(', ')})`,
 	},
 } satisfies CLIOptions
 
@@ -57,7 +57,7 @@ function help() {
 	let out = `image-compressor [ARGS?] [...OPTS?]\n`
 
 	out += `\nargs:
-help
+help:
 \tShow help.`
 
 	out += `\n\noptions:`
@@ -202,3 +202,5 @@ for (const f of files) {
 }
 
 console.table(files)
+
+console.log(styleText('green', 'All done!'))

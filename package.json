@@ -4,6 +4,7 @@
 	"type": "module",
 	"author": "Sami Al-Dury",
 	"description": "",
+	"license": "MIT",
 	"packageManager": "pnpm@10.9.0",
 	"scripts": {
 		"build": "tsc",
