@@ -14,6 +14,14 @@ const base = path.join(dirname, '..')
 
 const ogArgs = process.argv.slice(2)
 
+const OUTPUT_EXTENSIONS = ['webp', 'avif'] as const
+const outputExtensions = new Set(OUTPUT_EXTENSIONS)
+type OutputExtension = (typeof OUTPUT_EXTENSIONS)[number]
+
+const INPUT_EXTENSIONS = ['png', 'jpg', 'jpeg', 'webp'] as const
+const inputExtensions = new Set(INPUT_EXTENSIONS)
+type InputExtension = (typeof INPUT_EXTENSIONS)[number]
+
 interface CLIOptions {
 	[longOption: string]: ParseArgsOptionDescriptor & { help: string }
 }
@@ -36,6 +44,12 @@ const options = {
 		short: 'q',
 		default: '50',
 		help: 'Quality of the output image (1-100)',
+	},
+	format: {
+		type: 'string',
+		short: 'f',
+		default: 'avif',
+		help: 'Output format',
 	},
 } satisfies CLIOptions
 
@@ -71,10 +85,21 @@ const opts = {
 	input: path.resolve(args.values.input),
 	ouput: path.resolve(args.values.output),
 	quality: parseInt(args.values.quality, 10),
-} as const
+	format: args.values.format.toLowerCase() as OutputExtension,
+}
 
 d('args: %O', args.values)
 d('opts: %O', opts)
+
+if (!outputExtensions.has(opts.format)) {
+	console.error(
+		styleText(
+			'red',
+			`Format must be one of [${OUTPUT_EXTENSIONS.join(', ')}].`,
+		),
+	)
+	process.exit(1)
+}
 
 if (opts.quality < 1 || opts.quality > 100) {
 	console.error(styleText('red', 'Quality must be between 1-100.'))
@@ -95,14 +120,9 @@ async function* walk(dir: string) {
 	}
 }
 
-const OUTPUT_EXTENSION = 'avif'
-const SUPPORTED_EXTENSIONS = ['png', 'jpg', 'jpeg', 'webp'] as const
-const supportedExtensions = new Set(SUPPORTED_EXTENSIONS)
-type SupportedExtension = (typeof SUPPORTED_EXTENSIONS)[number]
-
 const files = [] as {
 	id: string
-	type: SupportedExtension
+	type: InputExtension
 	path: string
 	originalSize: number
 	newSize?: number
@@ -121,7 +141,7 @@ for await (const p of walk(opts.input)) {
 
 	files.push({
 		id: crypto.randomUUID(),
-		type: ext as SupportedExtension,
+		type: ext as InputExtension,
 		path: p,
 		originalSize: stat.size,
 	})
@@ -139,22 +159,26 @@ for (const f of files) {
 	}
 
 	// Copy the file as is, if not supported
-	if (!supportedExtensions.has(f.type)) {
+	if (!inputExtensions.has(f.type)) {
 		b('unsuported file %s, copying as is', f.path)
 		await fs.promises.copyFile(f.path, outputPath)
 		continue
 	}
 
-	outputPath = outputPath.replace('.' + f.type, '.' + OUTPUT_EXTENSION)
+	outputPath = outputPath.replace('.' + f.type, '.' + opts.format)
 
 	b('converting and compressing %s', f.path)
 	const info = await new Promise<sharp.OutputInfo>((res, rej) => {
-		sharp(f.path)
-			.avif({ quality: opts.quality })
-			.toFile(outputPath, (err, info) => {
-				if (err) rej(err)
-				else res(info)
-			})
+		const builder = sharp(f.path)
+		if (opts.format === 'avif') {
+			builder.avif({ quality: opts.quality })
+		} else if (opts.format === 'webp') {
+			builder.webp({ quality: opts.quality })
+		}
+		builder.toFile(outputPath, (err, info) => {
+			if (err) rej(err)
+			else res(info)
+		})
 	})
 	b('%s converted and compressed', f.path)
 
