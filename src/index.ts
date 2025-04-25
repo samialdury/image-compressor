@@ -35,7 +35,7 @@ const options = {
 		type: 'string',
 		short: 'q',
 		default: '50',
-		help: 'Quality of the output image (0-100)',
+		help: 'Quality of the output image (1-100)',
 	},
 } satisfies CLIOptions
 
@@ -75,6 +75,11 @@ const opts = {
 
 d('args: %O', args.values)
 d('opts: %O', opts)
+
+if (opts.quality < 1 || opts.quality > 100) {
+	console.error(styleText('red', 'Quality must be between 1-100.'))
+	process.exit(1)
+}
 
 if (!fs.existsSync(opts.input)) {
 	console.error(styleText('red', `${opts.input} does not exist.`))
@@ -145,7 +150,7 @@ for (const f of files) {
 	b('converting and compressing %s', f.path)
 	const info = await new Promise<sharp.OutputInfo>((res, rej) => {
 		sharp(f.path)
-			.avif({ quality: 50 })
+			.avif({ quality: opts.quality })
 			.toFile(outputPath, (err, info) => {
 				if (err) rej(err)
 				else res(info)
