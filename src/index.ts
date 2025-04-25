@@ -14,13 +14,13 @@ const base = path.join(dirname, '..')
 
 const ogArgs = process.argv.slice(2)
 
-const OUTPUT_EXTENSIONS = ['webp', 'avif'] as const
-const outputExtensions = new Set(OUTPUT_EXTENSIONS)
-type OutputExtension = (typeof OUTPUT_EXTENSIONS)[number]
-
 const INPUT_EXTENSIONS = ['png', 'jpg', 'jpeg', 'webp'] as const
 const inputExtensions = new Set(INPUT_EXTENSIONS)
 type InputExtension = (typeof INPUT_EXTENSIONS)[number]
+
+const OUTPUT_EXTENSIONS = ['webp', 'avif'] as const
+const outputExtensions = new Set(OUTPUT_EXTENSIONS)
+type OutputExtension = (typeof OUTPUT_EXTENSIONS)[number]
 
 interface CLIOptions {
 	[longOption: string]: ParseArgsOptionDescriptor & { help: string }
@@ -91,23 +91,31 @@ const opts = {
 d('args: %O', args.values)
 d('opts: %O', opts)
 
-if (!outputExtensions.has(opts.format)) {
-	console.error(
-		styleText(
-			'red',
-			`Format must be one of [${OUTPUT_EXTENSIONS.join(', ')}].`,
-		),
-	)
-	process.exit(1)
+function validate() {
+	const validationErrors: string[] = []
+
+	if (!outputExtensions.has(opts.format)) {
+		validationErrors.push(
+			`Invalid format "${opts.format}". Must be one of [${OUTPUT_EXTENSIONS.join(', ')}].`,
+		)
+	}
+
+	if (opts.quality < 1 || opts.quality > 100) {
+		validationErrors.push(
+			`Invalid quality "${opts.quality}". Must be between 1-100.`,
+		)
+	}
+
+	if (!fs.existsSync(opts.input)) {
+		validationErrors.push(`${opts.input} does not exist.`)
+	}
+
+	return validationErrors
 }
 
-if (opts.quality < 1 || opts.quality > 100) {
-	console.error(styleText('red', 'Quality must be between 1-100.'))
-	process.exit(1)
-}
-
-if (!fs.existsSync(opts.input)) {
-	console.error(styleText('red', `${opts.input} does not exist.`))
+const errs = validate()
+if (errs.length) {
+	console.error(styleText('red', errs.join('\n')))
 	process.exit(1)
 }
 
