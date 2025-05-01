@@ -24,7 +24,11 @@
 		"dev": "tsx src/index.ts",
 		"dev:debug": "DEBUG=imageco:* tsx src/index.ts",
 		"format": "prettier --write . ",
-		"prepublishOnly": "pnpm run build"
+		"prerelease": "pnpm run build && pnpm run format && git diff --exit-code --quiet || { echo 'Error: Uncommitted changes'; exit 1; }",
+		"release:patch": "pnpm run prerelease && pnpm version patch && pnpm publish",
+		"release:minor": "pnpm run prerelease && pnpm version minor && pnpm publish",
+		"release:major": "pnpm run prerelease && pnpm version major && pnpm publish",
+		"postpublish": "git push && git push --tags && gh release create v$(pnpm list --json | jq -r '.[0].version') --verify-tag --generate-notes"
 	},
 	"dependencies": {
 		"debug": "4.4.0",
