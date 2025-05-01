@@ -8,9 +8,7 @@ import { filesize } from 'filesize'
 
 const d = debug('imageco:main')
 
-const filename = fileURLToPath(import.meta.url)
-const dirname = path.dirname(filename)
-const base = path.join(dirname, '..')
+const cwd = process.cwd()
 
 const ogArgs = process.argv.slice(2)
 
@@ -30,13 +28,13 @@ const options = {
 	input: {
 		type: 'string',
 		short: 'i',
-		default: path.join(base, 'input'),
+		default: path.join(cwd, 'input'),
 		help: 'Input directory',
 	},
 	output: {
 		type: 'string',
 		short: 'o',
-		default: path.join(base, 'output'),
+		default: path.join(cwd, 'output'),
 		help: 'Output directory',
 	},
 	quality: {

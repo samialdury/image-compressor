@@ -23,7 +23,8 @@
 		"main:debug": "DEBUG=imageco:* node --enable-source-maps build/index.js",
 		"dev": "tsx src/index.ts",
 		"dev:debug": "DEBUG=imageco:* tsx src/index.ts",
-		"format": "prettier --write . "
+		"format": "prettier --write . ",
+		"prepublishOnly": "pnpm run build"
 	},
 	"dependencies": {
 		"debug": "4.4.0",
