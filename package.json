@@ -1,6 +1,6 @@
 {
 	"name": "imageco",
-	"version": "1.0.1",
+	"version": "1.0.2",
 	"type": "module",
 	"author": "Sami Al-Dury",
 	"description": "Convert/compress directory of images",
