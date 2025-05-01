@@ -105,7 +105,9 @@ function validate() {
 	}
 
 	if (!fs.existsSync(opts.input)) {
-		validationErrors.push(`${opts.input} does not exist.`)
+		validationErrors.push(
+			`${opts.input} does not exist.\nYou can set the input directory with the \`--input\` option.\nFor more info, run \`imageco help\`.`,
+		)
 	}
 
 	return validationErrors
