@@ -6,7 +6,7 @@ import debug from 'debug'
 import sharp from 'sharp'
 import { filesize } from 'filesize'
 
-const d = debug('image-compressor:main')
+const d = debug('imageco:main')
 
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
@@ -54,7 +54,7 @@ const options = {
 } satisfies CLIOptions
 
 function help() {
-	let out = `image-compressor [ARGS?] [...OPTS?]\n`
+	let out = `imageco [ARGS?] [...OPTS?]\n`
 
 	out += `\nargs:
 help:
@@ -158,7 +158,7 @@ for await (const p of walk(opts.input)) {
 d('collected files: %O', files)
 
 for (const f of files) {
-	const b = debug('image-compressor:' + f.id)
+	const b = debug('imageco:' + f.id)
 	let outputPath = f.path.replace('input', 'output')
 	const outputDir = path.dirname(outputPath)
 

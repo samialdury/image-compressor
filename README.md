@@ -1,13 +1,13 @@
-# `image-compressor`
+# `imageco`
 
 Convert a directory of jpg/png/webp/avif files to webp/avif.
 
 ## Usage
 
 ```sh
-$ image-compressor help
+$ imageco help
 
-image-compressor [ARGS?] [...OPTS?]
+imageco [ARGS?] [...OPTS?]
 
 args:
 help:

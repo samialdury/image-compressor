@@ -1,5 +1,5 @@
 {
-	"name": "image-compressor",
+	"name": "imageco",
 	"version": "1.0.0",
 	"type": "module",
 	"author": "Sami Al-Dury",
@@ -9,9 +9,9 @@
 	"scripts": {
 		"build": "tsc",
 		"main": "node --enable-source-maps build/index.js",
-		"main:debug": "DEBUG=image-compressor:* node --enable-source-maps build/index.js",
+		"main:debug": "DEBUG=imageco:* node --enable-source-maps build/index.js",
 		"dev": "tsx src/index.ts",
-		"dev:debug": "DEBUG=image-compressor:* tsx src/index.ts",
+		"dev:debug": "DEBUG=imageco:* tsx src/index.ts",
 		"format": "prettier --write . "
 	},
 	"dependencies": {
